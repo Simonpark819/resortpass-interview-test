@@ -13,13 +13,4 @@ struct Product: Codable, Identifiable {
     let availability: String
     let productTypeName: String
     let productCategories: [String]
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case name
-        case price
-        case availability
-        case productTypeName = "product_type_name"
-        case productCategories = "product_categories"
-    }
 }

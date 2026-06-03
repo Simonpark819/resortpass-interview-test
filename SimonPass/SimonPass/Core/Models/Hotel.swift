@@ -17,33 +17,13 @@ struct Hotel: Codable, Identifiable {
     let hotelStar: Int
     let latitude: Double
     let longitude: Double
-    let images: [HotelImage]
+    let image: [HotelImage]
     let products: [Product]
     let amenities: [Amenity]
     let availability: Bool
     let distanceMiles: Double
     let productName: String?
     let productCategories: [String]
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case name
-        case rating
-        case reviews
-        case cityName = "city_name"
-        case stateCode = "state_code"
-        case shortDesc = "short_desc"
-        case hotelStar = "hotel_star"
-        case latitude
-        case longitude
-        case images = "image"
-        case products
-        case amenities
-        case availability
-        case distanceMiles = "distance_miles"
-        case productName = "product_name"
-        case productCategories = "product_categories"
-    }
 }
 
 /// Represents the nested image structure returned by the hotel search API.
