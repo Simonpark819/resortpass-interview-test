@@ -2,8 +2,6 @@
 //  SimonPassApp.swift
 //  SimonPass
 //
-//  Created by Simon YoungHoon Park on 6/3/26.
-//
 
 import SwiftUI
 
