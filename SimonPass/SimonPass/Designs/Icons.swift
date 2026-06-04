@@ -16,8 +16,8 @@ enum Icons {
     static let favorite = Image(systemName: "heart")
     static let favoriteFilled = Image(systemName: "heart.fill")
 
-    static let back = Image("Icons/back_icon")
-    static let clear = Image("Icons/clear_icon")
-    static let hotel = Image("Icons/hotel_icon")
-    static let location = Image("Icons/location_icon")
+    static let back = Image("Icons/icon_back")
+    static let clear = Image("Icons/icon_clear")
+    static let hotel = Image("Icons/icon_hotel")
+    static let location = Image("Icons/icon_location")
 }
