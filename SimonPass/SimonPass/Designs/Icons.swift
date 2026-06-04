@@ -13,11 +13,11 @@ enum Icons {
     static let starPartialFilled = Image(systemName: "star.leadinghalf.filled")
     static let starFilled = Image(systemName: "star.fill")
 
-    static let favoriteFilled = Image("Icons/icon_favorite_filled")
-    static let favorite = Image("Icons/icon_favorite")
+    static let favorite = Image(systemName: "heart")
+    static let favoriteFilled = Image(systemName: "heart.fill")
 
-    static let back = Image(systemName: "chevron.left")
-    static let clear = Image(systemName: "xmark.circle.fill")
-    static let hotel = Image(systemName: "bed.double.fill")
-    static let location = Image(systemName: "mappin.and.ellipse")
+    static let back = Image("Icons/back_icon")
+    static let clear = Image("Icons/clear_icon")
+    static let hotel = Image("Icons/hotel_icon")
+    static let location = Image("Icons/location_icon")
 }
