@@ -9,19 +9,19 @@ import Foundation
 struct Hotel: Codable, Identifiable {
     let id: Int
     let name: String
-    let rating: Double
-    let reviews: Int
+    let rating: Double?
+    let reviews: Int?
     let cityName: String
     let stateCode: String
-    let shortDesc: String
-    let hotelStar: Int
+    let shortDesc: String?
+    let hotelStar: Int?
     let latitude: Double
     let longitude: Double
     let image: [HotelImage]
     let products: [Product]
     let amenities: [Amenity]
     let availability: Bool
-    let distanceMiles: Double
+    let distanceMiles: Double?
     let productName: String?
     let productCategories: [String]
 }
