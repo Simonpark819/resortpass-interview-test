@@ -12,21 +12,21 @@ enum Colors {
 
     // MARK: - Surface
 
-    /// Primary surface background — #FEFEFE
-    static let surfacePrimary = Color(hex: "#FEFEFE")
+    /// Primary surface background
+    static let surfacePrimary = Color("Colors/SurfacePrimary")
 
     /// Standard system background fallback
     static let background = Color(.systemBackground)
 
     // MARK: - Border
 
-    /// Secondary border color — #EEEFF2
-    static let borderSecondary = Color(hex: "#EEEFF2")
+    /// Secondary border color
+    static let borderSecondary = Color("Colors/BorderSecondary")
 
     // MARK: - Shadow
 
-    /// Card shadow color — #6A7287 at 12% opacity
-    static let cardShadow = Color(hex: "#6A7287").opacity(0.12)
+    /// Card shadow color
+    static let cardShadow = Color("Colors/CardShadow")
 
     // MARK: - Text
 
