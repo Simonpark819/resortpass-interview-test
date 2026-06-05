@@ -14,6 +14,7 @@ import Combine
 ///
 /// All network work is handled via async/await with structured Task
 /// cancellation — Combine is not used beyond the input boundary.
+@MainActor
 @Observable
 final class SearchViewModel {
 

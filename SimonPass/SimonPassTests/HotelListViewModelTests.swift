@@ -6,6 +6,7 @@
 import XCTest
 @testable import SimonPass
 
+@MainActor
 final class HotelListViewModelTests: XCTestCase {
 
     private var repository: MockHotelRepository!

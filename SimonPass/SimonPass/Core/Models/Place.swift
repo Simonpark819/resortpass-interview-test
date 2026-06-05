@@ -25,7 +25,7 @@ struct Place: Codable, Hashable {
     /// an Int or a String depending on the place type.
     /// This is an API inconsistency we absorb at the model layer
     /// so nothing above it ever has to deal with it.
-    init(from decoder: Decoder) throws {
+    nonisolated init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         id = try container.decode(Int.self, forKey: .id)

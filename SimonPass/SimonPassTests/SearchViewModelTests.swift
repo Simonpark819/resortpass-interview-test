@@ -6,6 +6,7 @@
 import XCTest
 @testable import SimonPass
 
+@MainActor
 final class SearchViewModelTests: XCTestCase {
 
     private var repository: MockSearchRepository!

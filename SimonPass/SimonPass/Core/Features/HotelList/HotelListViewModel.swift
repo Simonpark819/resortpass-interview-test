@@ -11,6 +11,7 @@ import Foundation
 ///
 /// No Combine needed here — this is a single async operation
 /// with no stream behavior, so async/await is the natural fit.
+@MainActor
 @Observable
 final class HotelListViewModel {
 
