@@ -1,6 +1,6 @@
 # SimonPass
 
-A native iOS implementation of the ResortPass take-home interview test — two interconnected screens backed by live API calls, built ground-up with SwiftUI and Swift Concurrency.
+A native iOS implementation of the ResortPass take-home interview test — two interconnected screens backed by live API calls, built from the ground up with SwiftUI and Swift Concurrency.
 
 ---
 
@@ -22,7 +22,7 @@ No API keys or additional setup required.
 
 ## Architecture
 
-The app uses **MVVM + Coordinator**, built on SwiftUI's `@Observable` macro and `NavigationStack`.
+The app uses **MVVM + Coordinator**, built on SwiftUI's `@ObservableObject` model and `NavigationStack`.
 
 ```
 App
@@ -73,7 +73,7 @@ State transitions happen only inside the ViewModel. Views are purely declarative
 
 ## Concurrency
 
-All network work is handled with **async/await and structured concurrency**. The one exception is the search input pipeline, where **Combine is used deliberately** for its debounce and deduplication operators — this is exactly the use case Combine was designed for, and async/await has no equivalent primitive.
+All network work is handled with **async/await and structured concurrency**. The one exception is the search input pipeline, where **Combine is used deliberately**. Combine provides mature, built-in debounce and deduplication operators, making it a natural fit for search input handling.
 
 The boundary is intentional and explicit:
 - **Combine** manages the input stream (debounce → deduplication → trigger)
