@@ -3,35 +3,36 @@
 //  SimonPass
 //
 
+import Combine
 import SwiftUI
 
 @main
 struct SimonPassApp: App {
 
-    @State private var coordinator: AppCoordinator
+    @StateObject private var coordinator: AppCoordinator
 
-        init() {
-            let container = AppContainer()
-            _coordinator = .init(wrappedValue: AppCoordinator(container: container))
-            configureURLCache()
-        }
+    init() {
+        let container = AppContainer()
+        _coordinator = StateObject(wrappedValue: AppCoordinator(container: container))
+        configureURLCache()
+    }
 
-        var body: some Scene {
-            WindowGroup {
-                NavigationStack(path: $coordinator.path) {
-                    SearchView(
-                        viewModel: coordinator.makeSearchViewModel(),
-                        onPlaceSelected: { place, latitude, longitude in
-                            coordinator.show(.hotelList(place: place, latitude: latitude, longitude: longitude))
-                        }
-                    )
-                    .navigationDestination(for: AppRoute.self) { route in
-                        coordinator.view(for: route)
+    var body: some Scene {
+        WindowGroup {
+            NavigationStack(path: $coordinator.path) {
+                SearchView(
+                    viewModel: coordinator.makeSearchViewModel(),
+                    onPlaceSelected: { place, latitude, longitude in
+                        coordinator.show(.hotelList(place: place, latitude: latitude, longitude: longitude))
                     }
+                )
+                .navigationDestination(for: AppRoute.self) { route in
+                    coordinator.view(for: route)
                 }
-                .environment(coordinator)
             }
+            .environmentObject(coordinator)
         }
+    }
 
     // MARK: - Cache configuration
 

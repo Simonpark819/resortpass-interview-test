@@ -15,6 +15,8 @@ enum Strings {
         static let placeholder = "Search destinations..."
         static let idleTitle = "Search destinations"
         static let idleDescription = "Type a city, state, or hotel name to get started."
+        static func emptyTitle(for searchText: String) -> String { "No results for \"\(searchText)\"" }
+        static let emptyDescription = "Check the spelling or try a new search."
     }
 
     // MARK: - Hotel list

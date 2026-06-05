@@ -3,6 +3,7 @@
 //  SimonPass
 //
 
+import Combine
 import SwiftUI
 
 /// The single source of truth for all navigation in the app.
@@ -11,12 +12,11 @@ import SwiftUI
 ///
 /// All dependencies are sourced from AppContainer, keeping
 /// view construction and dependency wiring out of the views themselves.
-@Observable
-final class AppCoordinator {
+final class AppCoordinator: ObservableObject {
 
     // MARK: - Properties
 
-    var path: NavigationPath = NavigationPath()
+    @Published var path: NavigationPath = NavigationPath()
     private let container: AppContainer
 
     // MARK: - Init

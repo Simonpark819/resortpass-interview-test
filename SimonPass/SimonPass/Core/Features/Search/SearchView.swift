@@ -3,6 +3,7 @@
 //  SimonPass
 //
 
+import Combine
 import SwiftUI
 
 /// The entry screen of the app. Presents a search bar and renders
@@ -13,7 +14,7 @@ struct SearchView: View {
 
     // MARK: - Dependencies
 
-    @State private var viewModel: SearchViewModel
+    @StateObject private var viewModel: SearchViewModel
     private let onPlaceSelected: (Place, Double, Double) -> Void
 
     // MARK: - Init
@@ -22,7 +23,7 @@ struct SearchView: View {
         viewModel: SearchViewModel,
         onPlaceSelected: @escaping (Place, Double, Double) -> Void
     ) {
-        _viewModel = .init(wrappedValue: viewModel)
+        _viewModel = StateObject(wrappedValue: viewModel)
         self.onPlaceSelected = onPlaceSelected
     }
 
@@ -68,15 +69,19 @@ struct SearchView: View {
     // MARK: - State views
 
     private var idleView: some View {
-        ContentUnavailableView(
-            Strings.Search.idleTitle,
+        EmptyStateView(
             systemImage: "magnifyingglass",
-            description: Text(Strings.Search.idleDescription)
+            title: Strings.Search.idleTitle,
+            description: Strings.Search.idleDescription
         )
     }
 
     private var emptyView: some View {
-        ContentUnavailableView.search(text: viewModel.searchText)
+        EmptyStateView(
+            systemImage: "magnifyingglass",
+            title: Strings.Search.emptyTitle(for: viewModel.searchText),
+            description: Strings.Search.emptyDescription
+        )
     }
 
     // MARK: - Places list

@@ -3,6 +3,7 @@
 //  SimonPass
 //
 
+import Combine
 import Foundation
 
 /// Manages state and data fetching for the hotel list screen.
@@ -11,9 +12,7 @@ import Foundation
 ///
 /// No Combine needed here — this is a single async operation
 /// with no stream behavior, so async/await is the natural fit.
-@MainActor
-@Observable
-final class HotelListViewModel {
+final class HotelListViewModel: ObservableObject {
 
     // MARK: - State
 
@@ -26,7 +25,7 @@ final class HotelListViewModel {
 
     // MARK: - Properties
 
-    private(set) var viewState: ViewState = .loading
+    @Published private(set) var viewState: ViewState = .loading
 
     private let repository: HotelRepositoryProtocol
     private let latitude: Double
@@ -49,20 +48,22 @@ final class HotelListViewModel {
     /// Initiates the hotel fetch. Called by the view on appear.
     /// Safe to call multiple times — cancels any in-flight task first.
     func fetchHotels() async {
-        viewState = .loading
+        await MainActor.run { viewState = .loading }
 
         do {
             let response = try await repository.fetchHotels(
                 latitude: latitude,
                 longitude: longitude
             )
-            viewState = response.hotels.isEmpty
-                ? .empty
-                : .success(response.hotels, response.currency)
+            await MainActor.run {
+                viewState = response.hotels.isEmpty
+                    ? .empty
+                    : .success(response.hotels, response.currency)
+            }
         } catch is CancellationError {
             // .task was cancelled because the view disappeared — expected, don't update state
         } catch {
-            viewState = .error(error.localizedDescription)
+            await MainActor.run { viewState = .error(error.localizedDescription) }
         }
     }
 

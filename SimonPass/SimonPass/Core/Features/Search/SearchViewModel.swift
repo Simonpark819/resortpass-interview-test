@@ -3,8 +3,8 @@
 //  SimonPass
 //
 
-import Foundation
 import Combine
+import Foundation
 
 /// Manages state and search logic for the autocomplete search screen.
 ///
@@ -14,9 +14,7 @@ import Combine
 ///
 /// All network work is handled via async/await with structured Task
 /// cancellation — Combine is not used beyond the input boundary.
-@MainActor
-@Observable
-final class SearchViewModel {
+final class SearchViewModel: ObservableObject {
 
     // MARK: - State
 
@@ -30,11 +28,11 @@ final class SearchViewModel {
 
     // MARK: - Observable properties
 
-    private(set) var viewState: ViewState = .idle
+    @Published private(set) var viewState: ViewState = .idle
 
     /// Exposed for two-way binding with the search field in the view.
     /// Changes are fed into the Combine pipeline via `searchSubject`.
-    var searchText: String = "" {
+    @Published var searchText: String = "" {
         didSet {
             searchSubject.send(searchText)
         }
@@ -104,16 +102,17 @@ final class SearchViewModel {
         searchTask = Task { [weak self] in
             guard let self else { return }
 
-            viewState = .loading
+            await MainActor.run { self.viewState = .loading }
 
             do {
                 let places = try await repository.searchPlaces(terms: terms)
-
-                viewState = places.isEmpty ? .empty : .success(places)
+                await MainActor.run {
+                    self.viewState = places.isEmpty ? .empty : .success(places)
+                }
             } catch is CancellationError {
                 // A newer keystroke cancelled this task — expected, not an error
             } catch {
-                viewState = .error(error.localizedDescription)
+                await MainActor.run { self.viewState = .error(error.localizedDescription) }
             }
         }
     }

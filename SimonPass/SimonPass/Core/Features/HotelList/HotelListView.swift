@@ -11,14 +11,14 @@ struct HotelListView: View {
 
     // MARK: - Dependencies
 
-    @State private var viewModel: HotelListViewModel
-    @Environment(AppCoordinator.self) private var coordinator
+    @StateObject private var viewModel: HotelListViewModel
+    @EnvironmentObject private var coordinator: AppCoordinator
     let placeName: String
 
     // MARK: - Init
 
     init(viewModel: HotelListViewModel, placeName: String) {
-        _viewModel = .init(wrappedValue: viewModel)
+        _viewModel = StateObject(wrappedValue: viewModel)
         self.placeName = placeName
     }
 
@@ -80,10 +80,10 @@ struct HotelListView: View {
     // MARK: - State views
 
     private var emptyView: some View {
-        ContentUnavailableView(
-            Strings.HotelList.emptyTitle,
+        EmptyStateView(
             systemImage: "bed.double",
-            description: Text(Strings.HotelList.emptyDescription)
+            title: Strings.HotelList.emptyTitle,
+            description: Strings.HotelList.emptyDescription
         )
     }
 
