@@ -33,27 +33,32 @@ struct SearchView: View {
             searchBar
             contentView
         }
+        .padding(.horizontal, Spacing.small)
         .navigationBarHidden(true)
     }
 
     // MARK: - Search bar
 
     private var searchBar: some View {
-        HStack(spacing: 12) {
-            HStack(spacing: 8) {
-                leadingSearchIcon
-                TextField("Search destinations...", text: $viewModel.searchText)
-                    .autocorrectionDisabled()
-                    .textInputAutocapitalization(.never)
-                trailingSearchControl
-            }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 10)
-            .background(Color(.systemGray6))
-            .clipShape(RoundedRectangle(cornerRadius: 10))
+        HStack(spacing: Spacing.small) {
+            leadingSearchIcon
+                .frame(width: 20, height: 20)
+            TextField("Search destinations...", text: $viewModel.searchText)
+                .font(Typography.searchRowTitle)
+                .autocorrectionDisabled()
+                .textInputAutocapitalization(.never)
+                .frame(height: 24)
+            trailingSearchControl
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(.horizontal, Spacing.small)
+        .frame(height: 44)
+        .background(Colors.surfacePrimary)
+        .clipShape(RoundedRectangle(cornerRadius: Radius.minimal))
+        .overlay {
+            RoundedRectangle(cornerRadius: Radius.minimal)
+                .stroke(Colors.borderSecondary, lineWidth: 1)
+        }
+        .padding(.horizontal, Spacing.large)
     }
 
     /// Shows a spinner while loading, a search icon otherwise.
@@ -63,8 +68,9 @@ struct SearchView: View {
             ProgressView()
                 .controlSize(.small)
         } else {
-            Image(systemName: "magnifyingglass")
-                .foregroundStyle(.secondary)
+            Icons.location
+                .frame(width: 20, height: 20)
+                .foregroundStyle(Colors.textSecondary)
         }
     }
 
@@ -75,8 +81,9 @@ struct SearchView: View {
             Button {
                 viewModel.clearSearch()
             } label: {
-                Image(systemName: "xmark.circle.fill")
-                    .foregroundStyle(.secondary)
+                Icons.clear
+                    .frame(width: 16, height: 16)
+                    .foregroundStyle(Colors.textSecondary)
             }
         }
     }
@@ -89,13 +96,13 @@ struct SearchView: View {
         case .idle:
             idleView
         case .loading:
-            loadingView
+            LoadingView()
         case .success(let places):
             placesList(places)
         case .empty:
             emptyView
         case .error(let message):
-            errorView(message: message)
+            ErrorStateView(message: message, onRetry: viewModel.retry)
         }
     }
 
@@ -109,33 +116,8 @@ struct SearchView: View {
         )
     }
 
-    private var loadingView: some View {
-        ProgressView()
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-
     private var emptyView: some View {
         ContentUnavailableView.search(text: viewModel.searchText)
-    }
-
-    private func errorView(message: String) -> some View {
-        VStack(spacing: 16) {
-            Image(systemName: "exclamationmark.triangle")
-                .font(.largeTitle)
-                .foregroundStyle(.secondary)
-            Text("Something went wrong")
-                .font(.headline)
-            Text(message)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-            Button("Try again") {
-                viewModel.retry()
-            }
-            .buttonStyle(.bordered)
-        }
-        .padding()
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     // MARK: - Places list
@@ -146,10 +128,16 @@ struct SearchView: View {
                 .contentShape(Rectangle())
                 .onTapGesture {
                     guard let latitude = place.latitude,
-                            let longitude = place.longitude else { return }
+                          let longitude = place.longitude else { return }
                     onPlaceSelected(place, latitude, longitude)
                 }
                 .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets(
+                    top: 0,
+                    leading: Spacing.large,
+                    bottom: 0,
+                    trailing: Spacing.large
+                ))
                 .opacity(place.latitude == nil ? 0.4 : 1.0)
         }
         .listStyle(.plain)
@@ -164,43 +152,25 @@ private struct PlaceRow: View {
     let place: Place
 
     var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: iconName)
-                .foregroundStyle(.secondary)
-                .frame(width: 20)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(place.name)
-                    .font(.body)
-                if let subtitle {
-                    Text(subtitle)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
+        HStack(spacing: Spacing.small) {
+            placeIcon
+                .frame(width: 24, height: 24)
+                .foregroundStyle(Colors.textSecondary)
+            Text(place.name)
+                .font(Typography.searchRowTitle)
+                .foregroundStyle(Colors.textPrimary)
+            Spacer()
         }
-        .padding(.vertical, 4)
+        .frame(height: 44)
     }
 
-    /// Maps the place type to an appropriate system icon.
-    private var iconName: String {
+    @ViewBuilder
+    private var placeIcon: some View {
         switch place.detailedType {
-        case "city": return "building.2"
-        case "state": return "map"
-        case "country": return "globe"
-        default: return "mappin"
-        }
-    }
-
-    /// Builds a readable subtitle from available location metadata.
-    private var subtitle: String? {
-        switch place.detailedType {
-        case "city":
-            if let state = place.stateCode, let country = place.countryCode {
-                return "\(state), \(country)"
-            }
-            return place.countryCode
+        case "hotel":
+            Icons.hotel
         default:
-            return place.countryCode
+            Icons.location
         }
     }
 }

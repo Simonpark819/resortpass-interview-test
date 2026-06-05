@@ -60,9 +60,9 @@ final class AppCoordinator {
                 viewModel: makeHotelListViewModel(
                     latitude: latitude,
                     longitude: longitude
-                )
+                ),
+                placeName: place.name
             )
-            .navigationTitle(place.name)
         }
     }
 }
