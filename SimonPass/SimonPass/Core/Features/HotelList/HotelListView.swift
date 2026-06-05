@@ -33,10 +33,7 @@ struct HotelListView: View {
         .background(Color(.systemBackground))
         .navigationBarHidden(true)
         .task {
-            viewModel.fetchHotels()
-        }
-        .onDisappear {
-            viewModel.cancelFetch()
+            await viewModel.fetchHotels()
         }
     }
 

@@ -42,6 +42,7 @@ final class SearchViewModel {
     // MARK: - Private properties
 
     private let repository: SearchRepositoryProtocol
+    private let debounceInterval: Int
 
     /// The entry point for the Combine debounce pipeline.
     /// Receives raw search text on every keystroke.
@@ -55,8 +56,9 @@ final class SearchViewModel {
 
     // MARK: - Init
 
-    init(repository: SearchRepositoryProtocol) {
+    init(repository: SearchRepositoryProtocol, debounceInterval: Int = 500) {
         self.repository = repository
+        self.debounceInterval = debounceInterval
         bindSearchPipeline()
     }
 
@@ -68,7 +70,7 @@ final class SearchViewModel {
     /// off to async/await for the actual network work.
     private func bindSearchPipeline() {
         searchSubject
-            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
+            .debounce(for: .milliseconds(debounceInterval), scheduler: RunLoop.main)
             .removeDuplicates()
             .sink { [weak self] terms in
                 guard let self else { return }
@@ -106,13 +108,10 @@ final class SearchViewModel {
             do {
                 let places = try await repository.searchPlaces(terms: terms)
 
-                guard !Task.isCancelled else { return }
-
                 viewState = places.isEmpty ? .empty : .success(places)
             } catch is CancellationError {
                 // A newer keystroke cancelled this task — expected, not an error
             } catch {
-                guard !Task.isCancelled else { return }
                 viewState = .error(error.localizedDescription)
             }
         }

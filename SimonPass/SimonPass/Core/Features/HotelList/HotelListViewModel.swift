@@ -31,11 +31,6 @@ final class HotelListViewModel {
     private let latitude: Double
     private let longitude: Double
 
-    /// Handle to the current fetch task.
-    /// Stored to support cancellation if the view disappears
-    /// before the request completes.
-    private var fetchTask: Task<Void, Never>?
-
     // MARK: - Init
 
     init(
@@ -52,43 +47,28 @@ final class HotelListViewModel {
 
     /// Initiates the hotel fetch. Called by the view on appear.
     /// Safe to call multiple times — cancels any in-flight task first.
-    func fetchHotels() {
-        fetchTask?.cancel()
+    func fetchHotels() async {
+        viewState = .loading
 
-        fetchTask = Task { [weak self] in
-            guard let self else { return }
-
-            viewState = .loading
-
-            do {
-                let response = try await repository.fetchHotels(
-                    latitude: latitude,
-                    longitude: longitude
-                )
-
-                guard !Task.isCancelled else { return }
-
-                viewState = response.hotels.isEmpty
-                    ? .empty
-                    : .success(response.hotels, response.currency)
-            } catch is CancellationError {
-                // View disappeared before fetch completed — expected
-            } catch {
-                guard !Task.isCancelled else { return }
-                viewState = .error(error.localizedDescription)
-            }
+        do {
+            let response = try await repository.fetchHotels(
+                latitude: latitude,
+                longitude: longitude
+            )
+            viewState = response.hotels.isEmpty
+                ? .empty
+                : .success(response.hotels, response.currency)
+        } catch is CancellationError {
+            // .task was cancelled because the view disappeared — expected, don't update state
+        } catch {
+            viewState = .error(error.localizedDescription)
         }
     }
 
     /// Called by the view when the user taps retry on the error state.
+    /// Unstructured Task here is intentional — retry is triggered from
+    /// a sync button action and needs to escape to async context.
     func retry() {
-        fetchHotels()
-    }
-
-    // MARK: - Cleanup
-
-    /// Cancels any in-flight fetch when the view is no longer needed.
-    func cancelFetch() {
-        fetchTask?.cancel()
+        Task { await fetchHotels() }
     }
 }
