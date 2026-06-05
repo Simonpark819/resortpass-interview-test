@@ -20,11 +20,9 @@ struct RatingView: View {
     var body: some View {
         HStack(spacing: 4) {
             starsRow
-            if let rating = rating as Double? {
-                Text(String(format: "%.1f", rating))
-                    .font(Typography.hotelCardSubtitle)
-                    .foregroundStyle(Colors.textPrimary)
-            }
+            Text(String(format: "%.1f", rating))
+                .font(Typography.hotelCardSubtitle)
+                .foregroundStyle(Colors.textPrimary)
             if let reviews {
                 Text("(\(reviews))")
                     .font(Typography.hotelCardSubtitle)

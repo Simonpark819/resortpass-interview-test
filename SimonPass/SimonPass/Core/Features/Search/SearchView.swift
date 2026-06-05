@@ -3,7 +3,6 @@
 //  SimonPass
 //
 
-import Combine
 import SwiftUI
 
 /// The entry screen of the app. Presents a search bar and renders
