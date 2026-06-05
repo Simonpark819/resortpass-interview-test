@@ -33,7 +33,7 @@ struct SearchView: View {
             searchBar
             contentView
         }
-        .padding(.horizontal, Spacing.small)
+        .padding(.horizontal, Spacing.spacing8)
         .navigationBarHidden(true)
     }
 
@@ -94,9 +94,9 @@ struct SearchView: View {
             .listRowSeparator(.hidden)
             .listRowInsets(EdgeInsets(
                 top: 0,
-                leading: Spacing.large,
+                leading: Spacing.spacing24,
                 bottom: 0,
-                trailing: Spacing.large
+                trailing: Spacing.spacing16
             ))
             .opacity(place.hasValidCoordinates ? 1.0 : 0.4)
             .disabled(!place.hasValidCoordinates)
@@ -115,7 +115,7 @@ private struct PlaceRow: View {
     let place: Place
 
     var body: some View {
-        HStack(spacing: Spacing.small) {
+        HStack(spacing: Spacing.spacing8) {
             placeIcon
                 .frame(width: 24, height: 24)
                 .foregroundStyle(Colors.textSecondary)

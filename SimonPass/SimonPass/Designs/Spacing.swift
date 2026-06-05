@@ -6,20 +6,15 @@
 import Foundation
 
 /// Spacing tokens derived from the ResortPass design spec.
+///
+/// Named by their point value so the amount is always unambiguous at the call site.
+/// Use these instead of raw CGFloat literals to keep spacing consistent and refactorable.
 enum Spacing {
-
-    /// 2pt — internal gap between card text elements
-    static let xxxSmall: CGFloat = 2
-
-    /// 4pt — gap between cards in the list
-    static let xxSmall: CGFloat = 4
-
-    /// 8pt — gap between image and info block within a card
-    static let small: CGFloat = 8
-
-    /// 12pt — standard internal content padding
-    static let medium: CGFloat = 12
-
-    /// 16pt — screen edge margins
-    static let large: CGFloat = 16
+    static let spacing2: CGFloat = 2
+    static let spacing4: CGFloat = 4
+    static let spacing8: CGFloat = 8
+    static let spacing12: CGFloat = 12
+    static let spacing16: CGFloat = 16
+    static let spacing20: CGFloat = 20
+    static let spacing24: CGFloat = 24
 }

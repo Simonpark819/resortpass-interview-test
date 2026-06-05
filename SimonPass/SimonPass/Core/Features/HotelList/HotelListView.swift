@@ -55,7 +55,7 @@ struct HotelListView: View {
                 .accessibilityLabel(A11y.HotelList.backButton)
                 Spacer()
             }
-            .padding(.horizontal, Spacing.large)
+            .padding(.horizontal, Spacing.spacing16)
         }
         .frame(height: 44)
         .background(Color(.systemBackground))
@@ -91,14 +91,14 @@ struct HotelListView: View {
 
     private func hotelList(_ hotels: [Hotel], currency: Currency) -> some View {
         ScrollView {
-            LazyVStack(spacing: Spacing.small) {
+            LazyVStack(spacing: Spacing.spacing8) {
                 ForEach(hotels) { hotel in
                     HotelCard(hotel: hotel, currency: currency)
                 }
             }
-            .padding(.horizontal, Spacing.large)
-            .padding(.top, Spacing.large)
-            .padding(.bottom, Spacing.medium)
+            .padding(.horizontal, Spacing.spacing16)
+            .padding(.top, Spacing.spacing16)
+            .padding(.bottom, Spacing.spacing12)
         }
     }
 }

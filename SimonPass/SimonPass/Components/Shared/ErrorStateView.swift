@@ -13,7 +13,7 @@ struct ErrorStateView: View {
     let onRetry: () -> Void
 
     var body: some View {
-        VStack(spacing: Spacing.medium) {
+        VStack(spacing: Spacing.spacing12) {
             Image(systemName: "exclamationmark.triangle")
                 .font(.largeTitle)
                 .foregroundStyle(Colors.textSecondary)
@@ -31,7 +31,7 @@ struct ErrorStateView: View {
             Button(Strings.Common.retryButton, action: onRetry)
                 .buttonStyle(.bordered)
         }
-        .padding(Spacing.large)
+        .padding(Spacing.spacing16)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }

@@ -12,7 +12,7 @@ struct SearchBar: View {
     let onClear: () -> Void
 
     var body: some View {
-        HStack(spacing: Spacing.small) {
+        HStack(spacing: Spacing.spacing8) {
             leadingIcon
                 .frame(width: 20, height: 20)
             TextField(Strings.Search.placeholder, text: $text)
@@ -22,7 +22,7 @@ struct SearchBar: View {
                 .frame(height: 24)
             clearButton
         }
-        .padding(.horizontal, Spacing.small)
+        .padding(.horizontal, Spacing.spacing8)
         .frame(height: 44)
         .background(Colors.surfacePrimary)
         .clipShape(RoundedRectangle(cornerRadius: Radius.minimal))
@@ -30,7 +30,7 @@ struct SearchBar: View {
             RoundedRectangle(cornerRadius: Radius.minimal)
                 .stroke(Colors.borderSecondary, lineWidth: 1)
         }
-        .padding(.horizontal, Spacing.large)
+        .padding(.horizontal, Spacing.spacing16)
     }
 
     @ViewBuilder

@@ -14,7 +14,7 @@ struct HotelCard: View {
     let currency: Currency
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Spacing.small) {
+        VStack(alignment: .leading, spacing: Spacing.spacing8) {
             hotelImage
             infoBlock
         }
@@ -54,8 +54,8 @@ struct HotelCard: View {
             .accessibilityLabel(A11y.HotelList.hotelImage(hotelName: hotel.name))
 
             favoriteButton
-                .padding(.top, Spacing.small)
-                .padding(.trailing, Spacing.small)
+                .padding(.top, Spacing.spacing8)
+                .padding(.trailing, Spacing.spacing8)
         }
     }
 
@@ -74,7 +74,7 @@ struct HotelCard: View {
     // MARK: - Info block
 
     private var infoBlock: some View {
-        VStack(alignment: .leading, spacing: Spacing.small) {
+        VStack(alignment: .leading, spacing: Spacing.spacing8) {
             Text(hotel.name)
                 .font(Typography.hotelCardTitle)
                 .foregroundStyle(Colors.textPrimary)
@@ -99,7 +99,7 @@ struct HotelCard: View {
                 }
             }
         }
-        .padding(.vertical, Spacing.medium)
+        .padding(.vertical, Spacing.spacing12)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(A11y.HotelList.hotelCard(
             name: hotel.name,
