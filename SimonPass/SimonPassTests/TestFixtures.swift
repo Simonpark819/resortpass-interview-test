@@ -121,3 +121,66 @@ extension HotelSearchResponse {
         HotelSearchResponse(total: hotels.count, page: 1, pages: 1, hotels: hotels, currency: currency)
     }
 }
+
+// MARK: - HTTPURLResponse factory
+
+extension HTTPURLResponse {
+    static func make(statusCode: Int, url: URL = URL(string: "https://example.com")!) -> HTTPURLResponse {
+        HTTPURLResponse(url: url, statusCode: statusCode, httpVersion: nil, headerFields: nil)!
+    }
+}
+
+// MARK: - MockURLProtocol
+
+final class MockURLProtocol: URLProtocol {
+    static var requestHandler: ((URLRequest) throws -> (URLResponse, Data))?
+
+    override class func canInit(with request: URLRequest) -> Bool { true }
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+
+    override func startLoading() {
+        guard let handler = MockURLProtocol.requestHandler else {
+            client?.urlProtocol(self, didFailWithError: URLError(.unknown))
+            return
+        }
+        do {
+            let (response, data) = try handler(request)
+            client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+            client?.urlProtocol(self, didLoad: data)
+            client?.urlProtocolDidFinishLoading(self)
+        } catch {
+            client?.urlProtocol(self, didFailWithError: error)
+        }
+    }
+
+    override func stopLoading() {}
+}
+
+// MARK: - PlaceEncodable
+// Place uses a custom Decodable init but isn't Encodable.
+// This mirror struct is used in tests to produce valid JSON for NetworkService tests.
+
+struct PlaceEncodable: Encodable {
+    let id: Int
+    let name: String
+    let type: String
+    let detailedType: String
+    let url: String
+    let latitude: Double?
+    let longitude: Double?
+
+    init(from place: Place) {
+        id = place.id
+        name = place.name
+        type = place.type
+        detailedType = place.detailedType
+        url = place.url
+        latitude = place.latitude
+        longitude = place.longitude
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case id, name, type, url, latitude, longitude
+        case detailedType = "detailed_type"
+    }
+}
