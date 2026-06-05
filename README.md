@@ -1,261 +1,180 @@
-# ResortPass Mobile Developer Interview Test
+# SimonPass
 
-## Delivery Method 🚚
+A native iOS implementation of the ResortPass take-home interview test — two interconnected screens backed by live API calls, built ground-up with SwiftUI and Swift Concurrency.
 
-Candidates should create a fork from the following repository: https://github.com/resortpass/mobile-interview-test. You'll then open one single pull request (PR) from your fork containing all the changes, including the initial project scaffolding and the implementation of the test.
+---
 
-Candidates have 5 days from the day they receive the test to deliver it.
+## Running the Project
 
-Candidates should also write a README file on their fork with a brief explanation of how their architecture works and any other important aspects of the project.
+**Requirements:**
+- Xcode 15+
+- iOS 16+ simulator or device
 
-Candidates have **5 days** from the day they receive the test to deliver it.
+**Steps:**
+1. Clone the repository
+2. Open `SimonPass/SimonPass.xcodeproj`
+3. Select a simulator or device and run
+4. Run tests with Cmd+U
 
-Candidates should also write a **README** file on their fork with a brief explanation of how their architecture works and any other important aspects of the project.
+No API keys or additional setup required.
 
-## The test
+---
 
-Welcome to the technical evaluation for the Flutter Developer position at ResortPass. This test is designed to assess your practical skills and understanding of mobile application development principles using the Flutter framework. Please read the instructions and requirements carefully before you begin.
+## Architecture
 
-### Evaluation Criteria
+The app uses **MVVM + Coordinator**, built on SwiftUI's `@Observable` macro and `NavigationStack`.
 
-We will review your project based on the following key aspects of software development:
+```
+App
+├── AppContainer       — dependency graph, ViewModel factories
+├── AppCoordinator     — navigation state, route resolution
+├── AppRoute           — type-safe navigation destinations
 
-- **Architecture and Code Structure:** We will analyze how you structure your code, organize different layers of your application, and manage dependencies.
-- **State Management:** Your approach to handling the state of the application will be evaluated, with a focus on efficiency and maintainability.
-- **API Interaction and Error Handling:** We will assess how you execute API calls, handle asynchronous operations, and manage various response states and potential errors.
-- **Data Serialization/Deserialization:** The methods you use to convert data between JSON and Dart objects will be reviewed.
-- **Dependency Injection:** We will look at your use of dependency injection patterns to build a modular and testable application.
-- **Navigation:** Your solution for handling navigation between different screens will be evaluated for its clarity and robustness.
-- **Code Readability and Documentation:** Your solution must be easy to read, with clear and consistent naming conventions. We will also review whether your code is documented with meaningful comments that explain complex logic, design choices, or non-obvious decisions.
+Core
+├── Features
+│   ├── Search         — SearchView + SearchViewModel
+│   └── HotelList      — HotelListView + HotelListViewModel
+├── Models             — Codable value types (Place, Hotel, Currency, ...)
+├── Networking         — NetworkService, APIEndpoint
+└── Repositories       — SearchRepository, HotelRepository
 
-### Technical Requirements
+Components
+└── Shared             — SearchBar, HotelCard, RatingView, ErrorStateView, LoadingView
 
-To ensure a consistent evaluation process, please adhere to the following technical requirements:
-
-- **Flutter Version:** Your project must be built with a minimum Flutter version of `3.32.0`.
-- **State Management:** You are required to use the `flutter_bloc` package for state management.
-- **Target Platforms:** The project should be configured to run on both Android and iOS, and the implementation must function normally on both platforms.
-- **API Calls:** You are free to choose your preferred method for handling API calls, whether using a third-party package or the built-in `http` library.
-- **Dependency Injection:** We recommend using the `get_it` package, but you are free to use any dependency injection solution you prefer.
-
-### Bonus Points
-
-The following items are not mandatory but will be considered a significant plus in our evaluation:
-
-- **Image Caching:** Implement a solution for image caching. The application should cache images on the first load and use the cached version upon content refresh, avoiding unnecessary re-downloads.
-- **UI/UX Best Practices:** Demonstrate an organized approach to managing your UI components, including typography, spacing, colors, and border radii. We will inspect how you organize your UI kit.
-
-### The Task
-
-The task consists of building two interconnected screens that perform API calls and display the results.
-
-All design mocks are available on the following Figma page: https://www.figma.com/design/KP2V0sftr9EIUs3VHiczSG/Mobile-Developer-Interview-Test?node-id=0-1&m=dev&t=XUND8zuCg9sn64km-1
-
-All the screens / components should be implemented as close as possible from what it is available on Figma.
-
-#### Screen 1: Autocomplete Search
-
-The primary goal of this screen is to provide a search functionality, where the application suggests a list of places as the user types a search term.
-
-#### Requirements
-
-- **Content:** The screen must have a top header containing a search bar. The main body should display a dynamic list of places returned by the API.
-- **State Handling:** The screen must properly handle and display:
-    - **Empty States:** When no results are returned for a search.
-    - **Error States:** When an API call fails.
-- **Search Logic:**
-    - You will call the API by passing the typed search terms as a query parameter.
-    - **Debouncing:** The API call must be debounced. A new request should only be made 500 milliseconds after the user's last keystroke.
-    - **Cancellation:** Before initiating a new API call, the previous one must be cancelled.
-    - **Loading State:** A loading state should be clearly indicated while the API call is in progress. You can use a loading indicator within the search bar's prefix icon or an alternative visual cue.
-
-#### API Endpoint
-
-The API to be used for this screen is a `GET` request to:
-
-`https://staging-app.resortpass.com/api/search/places/autocomplete?terms={terms}&limit=10&offset=0`
-
-Sample response:
-```json
-[
-    {
-        "id": 236,
-        "name": "Newport Beach, California",
-        "type": "city",
-        "detailed_type": "city",
-        "url": "/hotel-day-passes/Newport-Beach-236",
-        "parent_id": 4,
-        "parent_type": "state",
-        "state_code": "CA",
-        "country_code": "US",
-        "city_name": "Newport Beach",
-        "latitude": 33.6189,
-        "longitude": -117.9298,
-        "distance_search_only": false,
-        "indexName": "staging_locations",
-        "objectID": "Newport Beach, California",
-        "queryID": "6bfbd2b0055720ff3a0a13d6a96775bc"
-    },
-    ...
-]
+Designs                — Colors, Typography, Spacing, Radius, Icons
+Foundations            — Strings, A11y
 ```
 
-#### Screen 2: Hotel Listings
+### Why MVVM + Coordinator
 
-This screen will display a list of hotels based on the place selected from the autocomplete search results on Screen 1.
+MVVM with `ObservableObject` gives a clean, predictable data flow — ViewModels own application state while views emit user intent and render state. `@Published` properties drive SwiftUI updates and keep state changes explicit and traceable.
 
-#### Requirements
+The Coordinator pattern was a deliberate choice for scalability. Views never push or pop directly — they report events to the coordinator, which decides what happens next and constructs the destination. This keeps every screen independently instantiable and navigation logic centralised in one place, which scales well as the app grows.
 
-- **Data Source:** The screen will use the latitude and longitude of the selected place to call the next API.
-- **Rendering:** You are required to render the results in a vertical list, following a clean and professional design.
-- **State Handling:** Similar to Screen 1, the screen must properly handle and display:
-    - **Empty States:** When no hotels are available for the given location.
-    - **Error States:** When the API call fails.
-- **Loading State:** A clear loading state should be displayed while the API call is in progress.
+### Dependency Injection
 
-#### API Endpoint and Request Body
+Manual constructor injection via `AppContainer`. Long-lived dependencies are created and owned by `AppContainer` and injected downward — no third-party DI framework was introduced. At this scope, a lightweight container keeps the dependency graph explicit and readable without the overhead of a library.
 
-The API for this screen is a `POST` request to:
+---
 
-`https://staging-app.resortpass.com/api/search/algolia_hotels_v7`
+## State Management
 
-The body of the request must be a JSON object in the following format:
+Each ViewModel exposes a single `ViewState` enum that the view switches over:
 
-```json
-{
-    "location":
-    {
-        "latitude": 40.757,
-        "longitude": -73.736
-    },
-    "limit": 30,
-    "offset": 0
+```swift
+enum ViewState: Equatable {
+    case idle / loading / success / empty / error(String)
 }
 ```
 
-Sample response:
-```json
-{
-    "stage": 1,
-    "total": 164,
-    "pages": 6,
-    "page": 0,
-    "hits_per_page": 30,
-    "offset": 0,
-    "limit": 30,
-    "queryID": "61273775fca35824ba5f7be382029afc",
-    "indexName": "staging_hotels_v3",
-    "currency": {
-        "id": 7,
-        "symbol": "$",
-        "name": "United States Dollar",
-        "iso_code": "USD",
-        "created_at": "2022-01-10T10:52:09.456-05:00",
-        "updated_at": "2022-01-10T10:52:09.456-05:00",
-        "active": true
-    },
-    "user_from_usa": true,
-    "hot_spot_hotels": [],
-    "hotels": [
-        {
-            "active": true,
-            "adults_only": false,
-            "allow_booking": "0",
-            "amenities": [
-                {
-                    "description": "Food Service",
-                    "icon_text": "e908",
-                    "name": "food"
-                },
-                ...
-            ],
-            "availability": true,
-            "avg_rating": 0.0,
-            "cancellation_window": 840,
-            "can_be_cancelled": true,
-            "city_id": 123,
-            "city_name": "New York",
-            "city_sort_order": 1,
-            "closed_for_season": false,
-            "code": "NY",
-            "country": "United States of America",
-            "country_code": "US",
-            "created_at": "2023-07-06",
-            "desktop_img": "https://assets-staging.resortpass.dev/uploads/image/picture/35445/TWA_pool7.jpg",
-            "discounted": false,
-            "distance_text": "",
-            "distance_miles": 8.0,
-            "hotel_star": 4,
-            "hotels_count": 31,
-            "id": 1990,
-            "image": [
-                {
-                    "picture": {
-                        "url": "/uploads/image/picture/35445/TWA_pool7.jpg",
-                        "results": {
-                            "url": "https://assets-staging.resortpass.dev/uploads/image/picture/35445/results_TWA_pool7.jpg"
-                        },
-                        "details": {
-                            "url": "https://assets-staging.resortpass.dev/uploads/image/picture/35445/details_TWA_pool7.jpg"
-                        }
-                    }
-                },
-                ...
-            ],
-            "is_usa": true,
-            "latitude": 40.6457482,
-            "longitude": -73.7780172,
-            "name": "TWA Hotel",
-            "objectID": "1990:3227034",
-            "offers": [],
-            "product_categories": [
-                "Pool"
-            ],
-            "product_id": 3227034,
-            "product_images": [],
-            "product_name": "Pool Pass 9pm-10:45pm",
-            "product_type_id": 2,
-            "products": [
-                {
-                    "availability": "available",
-                    "id": 3227029,
-                    "name": "Day Pass",
-                    "price": 50.0,
-                    "product_categories": [
-                        "Pool"
-                    ],
-                    "product_type_id": 2,
-                    "product_type_name": "Day Pass",
-                    "product_type_sort_order": 1,
-                    "quantity": 30,
-                    "show_currency": false
-                }
-            ],
-            "rating": 4.1,
-            "region": [
-                "new-york-city"
-            ],
-            "reopen_date": null,
-            "reviews": 164,
-            "short_desc": "Provide discuss attention. Until however think top reduce fire. Mouth job source feel over town modern.",
-            "sort_order": 10,
-            "state": "New York",
-            "state_code": "NY",
-            "state_id": 38,
-            "timezone": "US/Eastern",
-            "url": "twa-hotel",
-            "vibes": {
-                "primary": "Trendy",
-                "secondary": null
-            },
-            "_geoloc": {
-                "lat": 40.6457482,
-                "lng": -73.7780172
-            }
-        },
-        ...
-    ]
-}
-```
+State transitions happen only inside the ViewModel. Views are purely declarative — they render what they're given. This makes the data flow predictable and the ViewModels straightforwardly testable by asserting state transitions against a mock repository.
 
-We look forward to reviewing your solution. Good luck!
+---
+
+## Concurrency
+
+All network work is handled with **async/await and structured concurrency**. The one exception is the search input pipeline, where **Combine is used deliberately** for its debounce and deduplication operators — this is exactly the use case Combine was designed for, and async/await has no equivalent primitive.
+
+The boundary is intentional and explicit:
+- **Combine** manages the input stream (debounce → deduplication → trigger)
+- **async/await** handles everything beyond that boundary (network request → state update)
+
+Cancellation is handled differently per screen:
+- **Search:** each keystroke cancels the previous `Task` before starting a new one, preventing stale responses from overwriting newer state
+- **Hotel List:** the fetch is `await`-ed directly inside SwiftUI's `.task` modifier, which cancels automatically when the view disappears
+
+---
+
+## Networking
+
+`URLSession` directly, with no third-party library. Given the scope of the current implementation — two endpoints, no authentication, no request queuing — a networking dependency would add overhead without meaningful benefit.
+
+For image loading specifically, **Nuke** would be a strong upgrade path over the current `URLCache` approach at production scale — it handles progressive rendering, memory pressure, and large image set performance more robustly.
+
+### Image Caching
+
+Images are cached using `URLCache` with 50MB memory and 200MB disk capacity. Hotel images are served from S3 with a `max-age=31536000` cache header, so `URLCache` handles cache hits natively without any additional logic. Search API responses are intentionally not cached — the server sets `max-age=0, private` on those endpoints.
+
+---
+
+## Navigation
+
+`AppCoordinator` owns a `NavigationPath` and is injected into the environment. All routes are defined as cases on the `AppRoute` enum, which is `Hashable` and passed to `NavigationStack`'s `navigationDestination` modifier.
+
+Views never reference other views directly — they call coordinator methods (`show`, `pop`, `popToRoot`) or fire callbacks. This keeps every screen independently instantiable and navigation logic in one place.
+
+---
+
+## Design System
+
+All visual tokens are centralised in `Designs/`:
+
+- **Colors** — semantic tokens with light/dark mode support via asset catalog color sets. Text colors use system semantic colors (`Color(.label)`) to inherit platform accessibility defaults
+- **Typography** — `Font.system(size:weight:)` throughout, which supports Dynamic Type scaling automatically
+- **Spacing** — numeric naming (`spacing4`, `spacing8`, `spacing16`) so the value is always unambiguous at the call site
+- **Radius, Icons** — centralised to prevent raw literals from scattering across the codebase
+
+User-facing strings live in `Foundations/Strings.swift` and accessibility metadata in `Foundations/A11y.swift`, kept separate because display copy and accessibility labels serve different audiences and evolve independently.
+
+---
+
+## Accessibility
+
+Both screens implement:
+- Meaningful `.accessibilityLabel` and `.accessibilityHint` on all interactive elements
+- Decorative images and icons marked `.accessibilityHidden(true)`
+- `HotelCard` info block collapsed into a single VoiceOver element with a composed label covering name, rating, reviews, location, and price
+- Place rows use `Button` (not `onTapGesture`) for correct button trait, keyboard navigation, and Switch Control support
+- Rows with no coordinates are `.disabled` with a distinct hint explaining unavailability
+
+---
+
+## Design Assumptions and Decisions
+
+The provided Figma design was used as the visual reference. A few gaps required judgment calls:
+
+**Custom navigation bar on the Hotel List screen**
+
+SwiftUI's default `NavigationBar` fades the title and status bar content as the user scrolls up. The design clearly shows a persistent, fully-visible navigation bar with content scrolling beneath it. To achieve this, the system bar is hidden (`.navigationBarHidden(true)`) and a custom bar is rendered as part of the view hierarchy, keeping it outside the scroll context entirely.
+
+**Place rows with no coordinates**
+
+The autocomplete API returns some results (typically broader geographic regions) with `null` latitude and longitude. These cannot be used to fetch hotels. Rather than silently dropping them from the list, they are rendered at reduced opacity and disabled — visible to the user but clearly non-interactive. This felt more honest than hiding them.
+
+**Hotel rating source**
+
+The API returns both `rating` and `avg_rating`. `rating` was used as it was consistently populated in observed responses and matched the displayed values in the design.
+
+**Currency display**
+
+Prices are displayed using the currency symbol returned in the API response envelope. No locale-based conversion is applied — the assumption is that the API already returns pricing in the appropriate currency for the user's context.
+
+---
+
+## Testing
+
+Unit tests cover:
+
+- `SearchViewModel` — state transitions, debounce deduplication, retry, clear
+- `HotelListViewModel` — fetch success/empty/error, retry
+- `Place.hasValidCoordinates` — all nil and zero coordinate combinations
+- `APIEndpoint.makeURLRequest()` — URL construction, query parameters, POST body encoding
+- `NetworkService` — success decoding, HTTP error codes, invalid response, malformed JSON, and `userMessage` mapping per error case. Tested via a `URLProtocol` stub injected through the `URLSession` initialiser — no real network required
+
+Repositories are not tested directly — they are single-line passthroughs with no logic of their own.
+
+UI tests are not included. Accessibility correctness is verified by implementation rather than automated assertion — the correctness of `A11y` labels and VoiceOver behaviour is best evaluated with the Accessibility Inspector or manual testing with VoiceOver enabled.
+
+### A note on `@MainActor` in test classes
+
+All test classes are marked `@MainActor`. This is intentional, not a workaround. `ObservableObject` ViewModels publish state changes on the main thread, and model types like `Place` are used throughout main-actor-bound contexts. Marking test classes `@MainActor` ensures tests run in the same execution context as production code, making assertions against `@Published` properties safe and the concurrency model consistent. In Swift 6 strict mode this would be enforced as an error — annotating explicitly here is the forward-compatible approach.
+
+---
+
+## Known Limitations and Future Improvements
+
+- **Environment configuration** — the app targets a single base URL (`staging-app.resortpass.com`). In a production setup this would be split across environment configurations (dev, staging, prod) using Xcode build schemes and `.xcconfig` files to inject the appropriate base URL at build time. This was intentionally omitted since only one endpoint was provided for the test.
+
+- **Pagination** — the hotel list fetches 30 results and stops. Infinite scroll with offset-based pagination would be the natural next step
+- **Favourite functionality** — the heart button on hotel cards is present in the design and wired up as a no-op. A real implementation would require a persistence layer (SwiftData or a remote favourites API)
+- **Image loading** — `URLCache` works well for this scope but a dedicated library like Nuke would handle memory pressure, cancellation on scroll, and progressive rendering more robustly at scale
