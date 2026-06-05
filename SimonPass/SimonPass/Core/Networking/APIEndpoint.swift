@@ -28,14 +28,12 @@ extension APIEndpoint {
     /// The base URL for all API requests.
     private static let baseURL = "https://staging-app.resortpass.com/api"
 
-    var urlRequest: URLRequest {
-        get throws {
-            switch self {
-            case .placeAutocomplete(let terms, let limit, let offset):
-                return try makeAutocompleteRequest(terms: terms, limit: limit, offset: offset)
-            case .hotelSearch(let latitude, let longitude, let limit, let offset):
-                return try makeHotelSearchRequest(latitude: latitude, longitude: longitude, limit: limit, offset: offset)
-            }
+    func makeURLRequest() throws -> URLRequest {
+        switch self {
+        case .placeAutocomplete(let terms, let limit, let offset):
+            return try makeAutocompleteRequest(terms: terms, limit: limit, offset: offset)
+        case .hotelSearch(let latitude, let longitude, let limit, let offset):
+            return try makeHotelSearchRequest(latitude: latitude, longitude: longitude, limit: limit, offset: offset)
         }
     }
 

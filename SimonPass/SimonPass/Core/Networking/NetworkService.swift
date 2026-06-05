@@ -59,7 +59,7 @@ final class NetworkService: NetworkServiceProtocol {
     /// - Returns: A decoded instance of `T`.
     /// - Throws: A `NetworkError` describing what went wrong.
     func request<T: Decodable>(_ endpoint: APIEndpoint) async throws -> T {
-        let urlRequest = try endpoint.urlRequest
+        let urlRequest = try endpoint.makeURLRequest()
 
         let (data, response) = try await session.data(for: urlRequest)
 
