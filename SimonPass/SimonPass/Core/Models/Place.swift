@@ -51,8 +51,8 @@ struct Place: Codable, Hashable {
         }
     }
 
-    /// setup to better handle API consistency issues where
-    /// some places arriving with 0,0 or nil coordinates can't be used for hotel search
+    /// Returns true only if both coordinates are present and non-zero.
+    /// The API returns null or 0,0 for broad regions that can't be used for hotel search.
     var hasValidCoordinates: Bool {
         guard let latitude, let longitude else { return false }
         return latitude != 0 && longitude != 0

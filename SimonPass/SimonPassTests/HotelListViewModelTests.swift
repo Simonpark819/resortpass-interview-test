@@ -68,12 +68,12 @@ final class HotelListViewModelTests: XCTestCase {
         }
     }
 
-    func test_fetchHotels_errorMessage_matchesLocalizedDescription() async {
+    func test_fetchHotels_errorMessage_usesUserMessage() async {
         repository.result = .failure(NetworkError.httpError(statusCode: 500))
 
         await viewModel.fetchHotels()
 
-        XCTAssertEqual(viewModel.viewState, .error(NetworkError.httpError(statusCode: 500).localizedDescription))
+        XCTAssertEqual(viewModel.viewState, .error(NetworkError.httpError(statusCode: 500).userMessage))
     }
 
     // MARK: - retry
