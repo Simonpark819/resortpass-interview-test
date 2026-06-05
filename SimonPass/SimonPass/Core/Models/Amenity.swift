@@ -6,7 +6,7 @@
 import Foundation
 
 /// Represents a hotel amenity.
-struct Amenity: Codable {
+struct Amenity: Codable, Equatable {
     let name: String
     let description: String
 }

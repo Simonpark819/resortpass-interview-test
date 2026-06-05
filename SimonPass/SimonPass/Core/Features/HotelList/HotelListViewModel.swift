@@ -16,7 +16,7 @@ final class HotelListViewModel {
 
     // MARK: - State
 
-    enum ViewState {
+    enum ViewState: Equatable {
         case loading
         case success([Hotel], Currency)
         case empty

@@ -6,7 +6,7 @@
 import Foundation
 
 /// Represents a single hotel result from the search API.
-struct Hotel: Codable, Identifiable {
+struct Hotel: Codable, Identifiable, Equatable {
     let id: Int
     let name: String
     let rating: Double?
@@ -30,10 +30,10 @@ struct Hotel: Codable, Identifiable {
 /// The top-level `picture.url` is intentionally unexposed — it is a relative
 /// path (e.g. /uploads/...) and cannot be used directly for network requests.
 /// Only the fully qualified variant URLs are surfaced.
-struct HotelImage: Codable {
+struct HotelImage: Codable, Equatable {
     let picture: Picture
 
-    struct Picture: Codable {
+    struct Picture: Codable, Equatable {
         /// Relative path only — not exposed outside this struct.
         private let url: String
         let results: ImageVariant?
@@ -43,7 +43,7 @@ struct HotelImage: Codable {
         /// Both `results` and `details` share this shape but serve
         /// intentionally different contexts — results for list views,
         /// details for full hotel screens.
-        struct ImageVariant: Codable {
+        struct ImageVariant: Codable, Equatable {
             let url: String
 
             var asURL: URL? {
