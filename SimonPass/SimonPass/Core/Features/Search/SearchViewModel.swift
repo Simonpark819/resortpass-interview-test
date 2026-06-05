@@ -19,7 +19,7 @@ final class SearchViewModel {
 
     // MARK: - State
 
-    enum ViewState {
+    enum ViewState: Equatable {
         case idle
         case loading
         case success([Place])

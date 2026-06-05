@@ -40,55 +40,11 @@ struct SearchView: View {
     // MARK: - Search bar
 
     private var searchBar: some View {
-        HStack(spacing: Spacing.small) {
-            leadingSearchIcon
-                .frame(width: 20, height: 20)
-            TextField(Strings.Search.placeholder, text: $viewModel.searchText)
-                .font(Typography.searchRowTitle)
-                .autocorrectionDisabled()
-                .textInputAutocapitalization(.never)
-                .frame(height: 24)
-            trailingSearchControl
-        }
-        .padding(.horizontal, Spacing.small)
-        .frame(height: 44)
-        .background(Colors.surfacePrimary)
-        .clipShape(RoundedRectangle(cornerRadius: Radius.minimal))
-        .overlay {
-            RoundedRectangle(cornerRadius: Radius.minimal)
-                .stroke(Colors.borderSecondary, lineWidth: 1)
-        }
-        .padding(.horizontal, Spacing.large)
-    }
-
-    /// Shows a spinner while loading, a search icon otherwise.
-    @ViewBuilder
-    private var leadingSearchIcon: some View {
-        if case .loading = viewModel.viewState {
-            ProgressView()
-                .controlSize(.small)
-                .accessibilityLabel(A11y.Common.loadingIndicator)
-        } else {
-            Icons.location
-                .frame(width: 20, height: 20)
-                .foregroundStyle(Colors.textSecondary)
-                .accessibilityHidden(true)
-        }
-    }
-
-    /// Shows a clear button when there is text, nothing otherwise.
-    @ViewBuilder
-    private var trailingSearchControl: some View {
-        if !viewModel.searchText.isEmpty {
-            Button {
-                viewModel.clearSearch()
-            } label: {
-                Icons.clear
-                    .frame(width: 16, height: 16)
-                    .foregroundStyle(Colors.textSecondary)
-            }
-            .accessibilityLabel(A11y.Search.clearButton)
-        }
+        SearchBar(
+            text: $viewModel.searchText,
+            isLoading: viewModel.viewState == .loading,
+            onClear: viewModel.clearSearch
+        )
     }
 
     // MARK: - Content
