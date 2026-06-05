@@ -18,7 +18,7 @@ struct ErrorStateView: View {
                 .font(.largeTitle)
                 .foregroundStyle(Colors.textSecondary)
 
-            Text("Something went wrong")
+            Text(Strings.Common.errorTitle)
                 .font(Typography.hotelCardTitle)
                 .foregroundStyle(Colors.textPrimary)
 
@@ -27,7 +27,7 @@ struct ErrorStateView: View {
                 .foregroundStyle(Colors.textSecondary)
                 .multilineTextAlignment(.center)
 
-            Button("Try again", action: onRetry)
+            Button(Strings.Common.retryButton, action: onRetry)
                 .buttonStyle(.bordered)
         }
         .padding(Spacing.large)

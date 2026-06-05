@@ -43,7 +43,7 @@ struct SearchView: View {
         HStack(spacing: Spacing.small) {
             leadingSearchIcon
                 .frame(width: 20, height: 20)
-            TextField("Search destinations...", text: $viewModel.searchText)
+            TextField(Strings.Search.placeholder, text: $viewModel.searchText)
                 .font(Typography.searchRowTitle)
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.never)
@@ -110,9 +110,9 @@ struct SearchView: View {
 
     private var idleView: some View {
         ContentUnavailableView(
-            "Search destinations",
+            Strings.Search.idleTitle,
             systemImage: "magnifyingglass",
-            description: Text("Type a city, state, or hotel name to get started.")
+            description: Text(Strings.Search.idleDescription)
         )
     }
 

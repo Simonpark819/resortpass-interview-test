@@ -80,9 +80,9 @@ struct HotelListView: View {
 
     private var emptyView: some View {
         ContentUnavailableView(
-            "No hotels found",
+            Strings.HotelList.emptyTitle,
             systemImage: "bed.double",
-            description: Text("There are no available hotels for this location.")
+            description: Text(Strings.HotelList.emptyDescription)
         )
     }
 
