@@ -10,7 +10,7 @@ import SwiftUI
 /// and makes missing asset errors easier to catch.
 enum Icons {
     static let starEmpty = Image(systemName: "star")
-    static let starPartialFilled = Image(systemName: "star.leadinghalf.filled")
+    static let starHalfFilled = Image(systemName: "star.leadinghalf.filled")
     static let starFilled = Image(systemName: "star.fill")
 
     static let favorite = Image(systemName: "heart")
