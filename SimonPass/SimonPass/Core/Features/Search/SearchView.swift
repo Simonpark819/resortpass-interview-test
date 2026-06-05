@@ -67,10 +67,12 @@ struct SearchView: View {
         if case .loading = viewModel.viewState {
             ProgressView()
                 .controlSize(.small)
+                .accessibilityLabel(A11y.Common.loadingIndicator)
         } else {
             Icons.location
                 .frame(width: 20, height: 20)
                 .foregroundStyle(Colors.textSecondary)
+                .accessibilityHidden(true)
         }
     }
 
@@ -85,6 +87,7 @@ struct SearchView: View {
                     .frame(width: 16, height: 16)
                     .foregroundStyle(Colors.textSecondary)
             }
+            .accessibilityLabel(A11y.Search.clearButton)
         }
     }
 
@@ -124,22 +127,25 @@ struct SearchView: View {
 
     private func placesList(_ places: [Place]) -> some View {
         List(places, id: \.self) { place in
-            PlaceRow(place: place)
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    guard let latitude = place.latitude,
-                          let longitude = place.longitude else { return }
-                    onPlaceSelected(place, latitude, longitude)
-                }
-                .listRowSeparator(.hidden)
-                .listRowInsets(EdgeInsets(
-                    top: 0,
-                    leading: Spacing.large,
-                    bottom: 0,
-                    trailing: Spacing.large
-                ))
-                .opacity(place.hasValidCoordinates ? 1.0 : 0.4 )
-                .disabled(!place.hasValidCoordinates)
+            Button {
+                guard let latitude = place.latitude,
+                      let longitude = place.longitude else { return }
+                onPlaceSelected(place, latitude, longitude)
+            } label: {
+                PlaceRow(place: place)
+            }
+            .buttonStyle(.plain)
+            .listRowSeparator(.hidden)
+            .listRowInsets(EdgeInsets(
+                top: 0,
+                leading: Spacing.large,
+                bottom: 0,
+                trailing: Spacing.large
+            ))
+            .opacity(place.hasValidCoordinates ? 1.0 : 0.4)
+            .disabled(!place.hasValidCoordinates)
+            .accessibilityLabel(place.name)
+            .accessibilityHint(place.hasValidCoordinates ? A11y.Search.placeRowHint : A11y.Search.unavailablePlaceHint)
         }
         .listStyle(.plain)
     }

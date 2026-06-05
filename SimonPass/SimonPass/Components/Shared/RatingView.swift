@@ -33,6 +33,7 @@ struct RatingView: View {
             Text("|")
                 .foregroundStyle(Colors.textSecondary)
                 .font(Typography.hotelCardSubtitle)
+                .accessibilityHidden(true)
             Text("\(city), \(stateCode)")
                 .font(Typography.hotelCardSubtitle)
                 .foregroundStyle(Colors.textPrimary)
@@ -52,6 +53,7 @@ struct RatingView: View {
                     .foregroundStyle(starColor)
             }
         }
+        .accessibilityHidden(true)
     }
 
     private func starImage(for index: Int) -> Image {

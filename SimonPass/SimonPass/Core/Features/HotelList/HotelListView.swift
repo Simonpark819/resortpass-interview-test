@@ -52,6 +52,7 @@ struct HotelListView: View {
                         .frame(width: 24, height: 24)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel(A11y.HotelList.backButton)
                 Spacer()
             }
             .padding(.horizontal, Spacing.large)

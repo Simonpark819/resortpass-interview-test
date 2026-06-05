@@ -17,6 +17,7 @@ struct ErrorStateView: View {
             Image(systemName: "exclamationmark.triangle")
                 .font(.largeTitle)
                 .foregroundStyle(Colors.textSecondary)
+                .accessibilityHidden(true)
 
             Text(Strings.Common.errorTitle)
                 .font(Typography.hotelCardTitle)

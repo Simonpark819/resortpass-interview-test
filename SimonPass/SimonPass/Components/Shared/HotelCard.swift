@@ -43,6 +43,7 @@ struct HotelCard: View {
                         .overlay {
                             Image(systemName: "photo")
                                 .foregroundStyle(Colors.textSecondary)
+                                .accessibilityHidden(true)
                         }
                 @unknown default:
                     EmptyView()
@@ -50,6 +51,7 @@ struct HotelCard: View {
             }
             .frame(height: 228)
             .clipShape(RoundedRectangle(cornerRadius: Radius.minimal))
+            .accessibilityLabel(A11y.HotelList.hotelImage(hotelName: hotel.name))
 
             favoriteButton
                 .padding(.top, Spacing.small)
@@ -66,6 +68,7 @@ struct HotelCard: View {
                 .foregroundStyle(.white)
                 .shadow(color: .black.opacity(0.3), radius: 4, x: 0, y: 2)
         }
+        .accessibilityLabel(A11y.HotelList.favoriteButton(hotelName: hotel.name))
     }
 
     // MARK: - Info block
@@ -97,5 +100,17 @@ struct HotelCard: View {
             }
         }
         .padding(.vertical, Spacing.medium)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(A11y.HotelList.hotelCard(
+            name: hotel.name,
+            rating: hotel.rating ?? 0.0,
+            reviews: hotel.reviews,
+            city: hotel.cityName,
+            stateCode: hotel.stateCode,
+            productName: hotel.products.first?.name,
+            price: hotel.products.first.map {
+                Strings.HotelList.fromPrice(symbol: currency.symbol, amount: Int($0.price.rounded()))
+            }
+        ))
     }
 }
