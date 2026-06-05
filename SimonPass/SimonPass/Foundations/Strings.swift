@@ -35,4 +35,13 @@ enum Strings {
         static let errorTitle = "Something went wrong"
         static let retryButton = "Try again"
     }
+
+    // MARK: - Error
+
+    enum Error {
+        static let generic = "Something went wrong. Please try again."
+        static let server = "Our servers are having trouble. Please try again shortly."
+        static let notFound = "The requested content could not be found."
+        static let noConnection = "Please check your internet connection and try again."
+    }
 }

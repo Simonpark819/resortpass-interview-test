@@ -29,6 +29,21 @@ enum NetworkError: Error, LocalizedError {
             return error.localizedDescription
         }
     }
+
+    /// User-facing message suitable for display in the UI.
+    /// Distinct from errorDescription, which is a developer-facing diagnostic.
+    var userMessage: String {
+        switch self {
+        case .invalidURL, .invalidResponse, .decodingError, .unknown:
+            return Strings.Error.generic
+        case .httpError(let statusCode) where statusCode >= 500:
+            return Strings.Error.server
+        case .httpError(let statusCode) where statusCode == 404:
+            return Strings.Error.notFound
+        case .httpError:
+            return Strings.Error.generic
+        }
+    }
 }
 
 /// Protocol defining the networking contract.

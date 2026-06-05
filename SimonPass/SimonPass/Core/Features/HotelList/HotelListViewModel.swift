@@ -63,7 +63,8 @@ final class HotelListViewModel: ObservableObject {
         } catch is CancellationError {
             // .task was cancelled because the view disappeared — expected, don't update state
         } catch {
-            await MainActor.run { viewState = .error(error.localizedDescription) }
+            let message = (error as? NetworkError)?.userMessage ?? Strings.Error.generic
+            await MainActor.run { viewState = .error(message) }
         }
     }
 

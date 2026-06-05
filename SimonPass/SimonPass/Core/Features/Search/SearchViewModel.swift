@@ -73,7 +73,7 @@ final class SearchViewModel: ObservableObject {
             .removeDuplicates()
             .sink { [weak self] terms in
                 guard let self else { return }
-                handleDebouncedInput(terms)
+                self.handleDebouncedInput(terms)
             }
             .store(in: &cancellables)
     }
@@ -112,7 +112,8 @@ final class SearchViewModel: ObservableObject {
             } catch is CancellationError {
                 // A newer keystroke cancelled this task — expected, not an error
             } catch {
-                await MainActor.run { self.viewState = .error(error.localizedDescription) }
+                let message = (error as? NetworkError)?.userMessage ?? Strings.Error.generic
+                await MainActor.run { self.viewState = .error(message) }
             }
         }
     }
