@@ -14,6 +14,7 @@ struct SearchView: View {
     // MARK: - Dependencies
 
     @StateObject private var viewModel: SearchViewModel
+    @FocusState private var isSearchFocused: Bool
     private let onPlaceSelected: (Place, Double, Double) -> Void
 
     // MARK: - Init
@@ -35,6 +36,9 @@ struct SearchView: View {
         }
         .padding(.horizontal, Spacing.spacing8)
         .navigationBarHidden(true)
+        .onTapGesture {
+            isSearchFocused = false
+        }
     }
 
     // MARK: - Search bar
@@ -43,7 +47,8 @@ struct SearchView: View {
         SearchBar(
             text: $viewModel.searchText,
             isLoading: viewModel.viewState == .loading,
-            onClear: viewModel.clearSearch
+            onClear: viewModel.clearSearch,
+            isFocused: $isSearchFocused
         )
     }
 

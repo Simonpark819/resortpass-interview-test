@@ -10,6 +10,7 @@ struct SearchBar: View {
     @Binding var text: String
     let isLoading: Bool
     let onClear: () -> Void
+    @FocusState.Binding var isFocused: Bool
 
     var body: some View {
         HStack(spacing: Spacing.spacing8) {
@@ -20,6 +21,7 @@ struct SearchBar: View {
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.never)
                 .frame(height: 24)
+                .focused($isFocused)
             clearButton
         }
         .padding(.horizontal, Spacing.spacing8)
