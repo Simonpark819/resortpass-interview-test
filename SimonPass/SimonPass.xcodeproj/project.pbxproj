@@ -40,11 +40,6 @@
 			path = SimonPassTests;
 			sourceTree = "<group>";
 		};
-		684E4AFB2FD08D5500161640 /* SimonPassUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SimonPassUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,7 +72,6 @@
 			children = (
 				684E4AE32FD08D5300161640 /* SimonPass */,
 				684E4AF12FD08D5500161640 /* SimonPassTests */,
-				684E4AFB2FD08D5500161640 /* SimonPassUITests */,
 				684E4AE22FD08D5300161640 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -152,9 +146,6 @@
 			);
 			dependencies = (
 				684E4AFA2FD08D5500161640 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				684E4AFB2FD08D5500161640 /* SimonPassUITests */,
 			);
 			name = SimonPassUITests;
 			packageProductDependencies = (
