@@ -138,7 +138,8 @@ struct SearchView: View {
                     bottom: 0,
                     trailing: Spacing.large
                 ))
-                .opacity(place.latitude == nil ? 0.4 : 1.0)
+                .opacity(place.hasValidCoordinates ? 1.0 : 0.4 )
+                .disabled(!place.hasValidCoordinates)
         }
         .listStyle(.plain)
     }

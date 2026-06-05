@@ -50,4 +50,11 @@ struct Place: Codable, Hashable {
             parentId = nil
         }
     }
+
+    /// setup to better handle API consistency issues where
+    /// some places arriving with 0,0 or nil coordinates can't be used for hotel search
+    var hasValidCoordinates: Bool {
+        guard let latitude, let longitude else { return false }
+        return latitude != 0 && longitude != 0
+    }
 }
