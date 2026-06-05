@@ -15,7 +15,6 @@ struct RatingView: View {
     let city: String
     let stateCode: String
     private let maxStars = 5
-    private let starColor = Color(hex: "#22272A")
 
     var body: some View {
         HStack(spacing: 4) {
@@ -48,7 +47,6 @@ struct RatingView: View {
                     .scaledToFit()
                     .frame(width: 12, height: 12)
                     .frame(width: 16, height: 16)
-                    .foregroundStyle(starColor)
             }
         }
         .accessibilityHidden(true)
