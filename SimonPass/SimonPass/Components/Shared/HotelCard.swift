@@ -89,7 +89,7 @@ struct HotelCard: View {
                         .font(Typography.hotelCardSubtitle)
                         .foregroundStyle(Colors.textSecondary)
                     Spacer()
-                    Text("From \(currency.symbol)\(Int(product.price))")
+                    Text("From \(currency.symbol)\(Int(product.price.rounded()))")
                         .font(Typography.hotelCardSubtitle)
                         .fontWeight(.semibold)
                         .foregroundStyle(Colors.textPrimary)
